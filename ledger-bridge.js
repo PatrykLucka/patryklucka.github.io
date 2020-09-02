@@ -39,7 +39,7 @@ export default class LedgerBridge {
 
     async makeApp () {
         try {
-            if (window.navigator.oscpu.contains('Windows') && window.chrome) {
+            if (window.navigator.oscpu.indexOf('Windows') > -1 && window.chrome) {
                 this.transport = await TransportWebUSB.create()
             } else {
                 this.transport = await TransportU2F.create()
