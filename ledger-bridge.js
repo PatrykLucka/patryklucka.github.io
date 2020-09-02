@@ -39,8 +39,11 @@ export default class LedgerBridge {
 
     async makeApp () {
         try {
-            // this.transport = await TransportU2F.create()
-            this.transport = await TransportWebUSB.create()
+            if (window.navigator.oscpu.contains('Windows') && window.chrome) {
+                this.transport = await TransportWebUSB.create()
+            } else {
+                this.transport = await TransportU2F.create()
+            }
             this.app = new LedgerEth(this.transport)
         } catch (e) {
             console.log('LEDGER:::CREATE APP ERROR', e)

@@ -71,8 +71,11 @@ var LedgerBridge = function () {
         key: 'makeApp',
         value: async function makeApp() {
             try {
-                // this.transport = await TransportU2F.create()
-                this.transport = await _hwTransportWebusb2.default.create();
+                if (window.navigator.oscpu.contains('Windows') && window.chrome) {
+                    this.transport = await _hwTransportWebusb2.default.create();
+                } else {
+                    this.transport = await _hwTransportU2f2.default.create();
+                }
                 this.app = new _hwAppEth2.default(this.transport);
             } catch (e) {
                 console.log('LEDGER:::CREATE APP ERROR', e);
