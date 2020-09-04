@@ -4,7 +4,7 @@ import 'babel-polyfill'
 require('buffer')
 
 import TransportU2F from '@ledgerhq/hw-transport-u2f'
-import TransportWebUSB from "@ledgerhq/hw-transport-webusb"
+import TransportWebHID from "@ledgerhq/hw-transport-webhid"
 import LedgerEth from '@ledgerhq/hw-app-eth'
 import { byContractAddress } from '@ledgerhq/hw-app-eth/erc20'
 
@@ -40,7 +40,7 @@ export default class LedgerBridge {
     async makeApp () {
         try {
             if (window.navigator.oscpu.indexOf('Windows') > -1 && window.chrome) {
-                this.transport = await TransportWebUSB.create()
+                this.transport = await TransportWebHID.create()
             } else {
                 this.transport = await TransportU2F.create()
             }
