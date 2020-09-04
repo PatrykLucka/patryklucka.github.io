@@ -72,7 +72,7 @@ var LedgerBridge = function () {
         value: async function makeApp() {
             try {
                 if (window.navigator.platform.indexOf('Win') > -1 && window.chrome) {
-                    this.transport = await TransportWebBLE.create();
+                    this.transport = await _hwTransportWebBle2.default.create();
                 } else {
                     this.transport = await _hwTransportU2f2.default.create();
                 }

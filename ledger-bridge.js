@@ -4,7 +4,7 @@ import 'babel-polyfill'
 require('buffer')
 
 import TransportU2F from '@ledgerhq/hw-transport-u2f'
-import TransportWebHID from "@ledgerhq/hw-transport-web-ble"
+import TransportWebBLE from "@ledgerhq/hw-transport-web-ble"
 import LedgerEth from '@ledgerhq/hw-app-eth'
 import { byContractAddress } from '@ledgerhq/hw-app-eth/erc20'
 
