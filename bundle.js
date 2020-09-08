@@ -72,7 +72,7 @@ var LedgerBridge = function () {
         value: async function makeApp() {
             try {
                 // if (window.navigator.platform.indexOf('Win') > -1 && window.chrome) {
-                this.transport = await _WebSocketTransport2.default.open("http://localhost:8435");
+                this.transport = await _WebSocketTransport2.default.open("ws://localhost:8435");
                 // } else {
                 //     this.transport = await TransportU2F.create()
                 // }
