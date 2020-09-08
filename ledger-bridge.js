@@ -4,7 +4,7 @@ import 'babel-polyfill'
 require('buffer')
 
 import TransportU2F from '@ledgerhq/hw-transport-u2f'
-import TransportWebBLE from "@ledgerhq/hw-transport-web-ble"
+import WebSocketTransport from "@ledgerhq/hw-transport-http/lib/WebSocketTransport"
 import LedgerEth from '@ledgerhq/hw-app-eth'
 import { byContractAddress } from '@ledgerhq/hw-app-eth/erc20'
 
@@ -39,11 +39,11 @@ export default class LedgerBridge {
 
     async makeApp () {
         try {
-            if (window.navigator.platform.indexOf('Win') > -1 && window.chrome) {
-                this.transport = await TransportWebBLE.create()
-            } else {
-                this.transport = await TransportU2F.create()
-            }
+            // if (window.navigator.platform.indexOf('Win') > -1 && window.chrome) {
+            this.transport = await WebSocketTransport.open("http://localhost:8435")
+            // } else {
+            //     this.transport = await TransportU2F.create()
+            // }
             this.app = new LedgerEth(this.transport)
         } catch (e) {
             console.log('LEDGER:::CREATE APP ERROR', e)
