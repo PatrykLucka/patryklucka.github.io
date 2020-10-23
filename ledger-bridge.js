@@ -39,11 +39,14 @@ export default class LedgerBridge {
         window.parent.postMessage(msg, '*')
     }
 
+    delay(ms) {
+        return new Promise((success) => setTimeout(success, ms));
+    }
+
     checkTransportLoop() {
         return WebSocketTransport.check(BRIDGE_URL).catch(async () => {
             await delay(500);
-            if (isCancelled()) return;
-            return checkLoop(isCancelled);
+            return checkLoop();
         });
     }
 
