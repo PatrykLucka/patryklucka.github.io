@@ -29,6 +29,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 require('buffer');
 
+var BRIDGE_URL = "ws://localhost:8435";
+
 var LedgerBridge = function () {
     function LedgerBridge() {
         _classCallCheck(this, LedgerBridge);
@@ -68,15 +70,29 @@ var LedgerBridge = function () {
             window.parent.postMessage(msg, '*');
         }
     }, {
+        key: 'checkTransportLoop',
+        value: function checkTransportLoop() {
+            return _WebSocketTransport2.default.check(BRIDGE_URL).catch(async function () {
+                await delay(500);
+                if (isCancelled()) return;
+                return checkLoop(isCancelled);
+            });
+        }
+    }, {
         key: 'makeApp',
         value: async function makeApp() {
+            var _this2 = this;
+
             try {
                 // if (window.navigator.platform.indexOf('Win') > -1 && window.chrome) {
-                this.transport = await _WebSocketTransport2.default.open("ws://localhost:8435");
+                window.open('ledgerlive://bridge?appName=Ethereum');
+                this.checkTransportLoop().then(async function () {
+                    _this2.transport = await _WebSocketTransport2.default.open(BRIDGE_URL);
+                    _this2.app = new _hwAppEth2.default(_this2.transport);
+                });
                 // } else {
                 //     this.transport = await TransportU2F.create()
                 // }
-                this.app = new _hwAppEth2.default(this.transport);
             } catch (e) {
                 console.log('LEDGER:::CREATE APP ERROR', e);
             }
@@ -91,9 +107,10 @@ var LedgerBridge = function () {
         key: 'unlock',
         value: async function unlock(replyAction, hdPath) {
             try {
+                console.log('ulock - makeApp!: ', replyAction);
                 await this.makeApp();
                 var res = await this.app.getAddress(hdPath, false, true);
-
+                console.log('res: ', res);
                 this.sendMessageToExtension({
                     action: replyAction,
                     success: true,
