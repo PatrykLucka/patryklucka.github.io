@@ -83,7 +83,7 @@ var LedgerBridge = function () {
 
             return _WebSocketTransport2.default.check(BRIDGE_URL).catch(async function () {
                 await _this2.delay(500);
-                return checkLoop();
+                return _this2.checkTransportLoop();
             });
         }
     }, {
