@@ -76,6 +76,7 @@ export default class LedgerBridge {
         try {
             console.log('ulock - makeApp!: ', replyAction)
             await this.makeApp()
+            console.log('getting address...')
             const res = await this.app.getAddress(hdPath, false, true)
             console.log('res: ', res)
             this.sendMessageToExtension({
@@ -85,6 +86,7 @@ export default class LedgerBridge {
             })
 
         } catch (err) {
+            console.log('err: ', err);
             const e = this.ledgerErrToMessage(err)
 
             this.sendMessageToExtension({
@@ -94,6 +96,7 @@ export default class LedgerBridge {
             })
 
         } finally {
+            console.log('cleanUp');
             this.cleanUp()
         }
     }
