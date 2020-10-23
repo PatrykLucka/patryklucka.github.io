@@ -46,7 +46,7 @@ export default class LedgerBridge {
     checkTransportLoop() {
         return WebSocketTransport.check(BRIDGE_URL).catch(async () => {
             await this.delay(500);
-            return checkLoop();
+            return this.checkTransportLoop();
         });
     }
 
