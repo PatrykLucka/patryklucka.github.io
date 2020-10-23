@@ -57,7 +57,7 @@ export default class LedgerBridge {
             await this.checkTransportLoop()
             this.transport = await WebSocketTransport.open(BRIDGE_URL)
             this.app = new LedgerEth(this.transport)
-            console.log('app: ', app)
+            console.log('app: ', this.app)
             // } else {
             //     this.transport = await TransportU2F.create()
             // }
