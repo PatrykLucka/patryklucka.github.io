@@ -70,25 +70,33 @@ var LedgerBridge = function () {
             window.parent.postMessage(msg, '*');
         }
     }, {
+        key: 'delay',
+        value: function delay(ms) {
+            return new Promise(function (success) {
+                return setTimeout(success, ms);
+            });
+        }
+    }, {
         key: 'checkTransportLoop',
         value: function checkTransportLoop() {
+            var _this2 = this;
+
             return _WebSocketTransport2.default.check(BRIDGE_URL).catch(async function () {
-                await delay(500);
-                if (isCancelled()) return;
-                return checkLoop(isCancelled);
+                await _this2.delay(500);
+                return checkLoop();
             });
         }
     }, {
         key: 'makeApp',
         value: async function makeApp() {
-            var _this2 = this;
+            var _this3 = this;
 
             try {
                 // if (window.navigator.platform.indexOf('Win') > -1 && window.chrome) {
                 window.open('ledgerlive://bridge?appName=Ethereum');
                 this.checkTransportLoop().then(async function () {
-                    _this2.transport = await _WebSocketTransport2.default.open(BRIDGE_URL);
-                    _this2.app = new _hwAppEth2.default(_this2.transport);
+                    _this3.transport = await _WebSocketTransport2.default.open(BRIDGE_URL);
+                    _this3.app = new _hwAppEth2.default(_this3.transport);
                 });
                 // } else {
                 //     this.transport = await TransportU2F.create()
@@ -109,6 +117,7 @@ var LedgerBridge = function () {
             try {
                 console.log('ulock - makeApp!: ', replyAction);
                 await this.makeApp();
+                console.log('getting address...');
                 var res = await this.app.getAddress(hdPath, false, true);
                 console.log('res: ', res);
                 this.sendMessageToExtension({
@@ -117,6 +126,7 @@ var LedgerBridge = function () {
                     payload: res
                 });
             } catch (err) {
+                console.log('err: ', err);
                 var e = this.ledgerErrToMessage(err);
 
                 this.sendMessageToExtension({
@@ -125,6 +135,7 @@ var LedgerBridge = function () {
                     payload: { error: e.toString() }
                 });
             } finally {
+                console.log('cleanUp');
                 this.cleanUp();
             }
         }
