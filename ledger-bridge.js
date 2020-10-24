@@ -75,7 +75,7 @@ export default class LedgerBridge {
         try {
             console.log('ulock - makeApp!: ', replyAction)
             await this.makeApp()
-            console.log('getting address...')
+            console.log('getting address...: ', hdPath)
             const res = await this.app.getAddress(hdPath, false, true)
             console.log('res: ', res)
             this.sendMessageToExtension({

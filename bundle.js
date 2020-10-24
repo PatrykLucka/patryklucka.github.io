@@ -115,7 +115,7 @@ var LedgerBridge = function () {
             try {
                 console.log('ulock - makeApp!: ', replyAction);
                 await this.makeApp();
-                console.log('getting address...');
+                console.log('getting address...: ', hdPath);
                 var res = await this.app.getAddress(hdPath, false, true);
                 console.log('res: ', res);
                 this.sendMessageToExtension({
