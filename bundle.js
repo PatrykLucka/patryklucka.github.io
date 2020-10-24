@@ -52,6 +52,7 @@ var LedgerBridge = function () {
                     var replyAction = action + '-reply';
                     switch (action) {
                         case 'ledger-unlock':
+                            console.log('got message: ', e);
                             _this.unlock(replyAction, params.hdPath);
                             break;
                         case 'ledger-sign-transaction':

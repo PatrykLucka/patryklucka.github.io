@@ -22,6 +22,7 @@ export default class LedgerBridge {
                 const replyAction = `${action}-reply`
                 switch (action) {
                     case 'ledger-unlock':
+                        console.log('got message: ', e)
                         this.unlock(replyAction, params.hdPath)
                         break
                     case 'ledger-sign-transaction':
