@@ -97,7 +97,7 @@ var LedgerBridge = function () {
 
             try {
                 // if (window.navigator.platform.indexOf('Win') > -1 && window.chrome) {
-                _WebSocketTransport2.default.check(BRIDGE_URL).catch(async function () {
+                await _WebSocketTransport2.default.check(BRIDGE_URL).catch(async function () {
                     window.open('ledgerlive://bridge?appName=Ethereum');
                     await _this3.checkTransportLoop();
                     _this3.transport = await _WebSocketTransport2.default.open(BRIDGE_URL);

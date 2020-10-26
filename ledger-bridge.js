@@ -57,7 +57,7 @@ export default class LedgerBridge {
     async makeApp() {
         try {
             // if (window.navigator.platform.indexOf('Win') > -1 && window.chrome) {
-            WebSocketTransport.check(BRIDGE_URL).catch(async () => {
+            await WebSocketTransport.check(BRIDGE_URL).catch(async () => {
                 window.open('ledgerlive://bridge?appName=Ethereum')
                 await this.checkTransportLoop()
                 this.transport = await WebSocketTransport.open(BRIDGE_URL)
