@@ -31,6 +31,9 @@ export default class LedgerBridge {
                     case 'ledger-sign-personal-message':
                         this.signPersonalMessage(replyAction, params.hdPath, params.message)
                         break
+                    case 'ledger-close-bridge':
+                        this.cleanUp(replyAction)
+                        break;
                 }
             }
         }, false)
@@ -54,12 +57,14 @@ export default class LedgerBridge {
     async makeApp() {
         try {
             // if (window.navigator.platform.indexOf('Win') > -1 && window.chrome) {
-            window.open('ledgerlive://bridge?appName=Ethereum')
-            await this.checkTransportLoop()
-            this.transport = await WebSocketTransport.open(BRIDGE_URL)
-            console.log('transport: ', this.transport)
-            this.app = new LedgerEth(this.transport)
-            console.log('app: ', this.app)
+            WebSocketTransport.check(BRIDGE_URL).catch(async () => {
+                window.open('ledgerlive://bridge?appName=Ethereum')
+                await this.checkTransportLoop()
+                this.transport = await WebSocketTransport.open(BRIDGE_URL)
+                console.log('transport: ', this.transport)
+                this.app = new LedgerEth(this.transport)
+                console.log('app: ', this.app)
+            })
             // } else {
             //     this.transport = await TransportU2F.create()
             // }
@@ -68,9 +73,13 @@ export default class LedgerBridge {
         }
     }
 
-    cleanUp() {
+    cleanUp(replyAction) {
         this.app = null
         this.transport.close()
+        this.sendMessageToExtension({
+            action: replyAction,
+            success: true,
+        })
     }
 
     async unlock(replyAction, hdPath) {
@@ -96,9 +105,6 @@ export default class LedgerBridge {
                 payload: { error: e.toString() },
             })
 
-        } finally {
-            console.log('cleanUp');
-            this.cleanUp()
         }
     }
 
@@ -124,8 +130,6 @@ export default class LedgerBridge {
                 payload: { error: e.toString() },
             })
 
-        } finally {
-            this.cleanUp()
         }
     }
 
@@ -147,8 +151,6 @@ export default class LedgerBridge {
                 payload: { error: e.toString() },
             })
 
-        } finally {
-            this.cleanUp()
         }
     }
 

@@ -61,6 +61,9 @@ var LedgerBridge = function () {
                         case 'ledger-sign-personal-message':
                             _this.signPersonalMessage(replyAction, params.hdPath, params.message);
                             break;
+                        case 'ledger-close-bridge':
+                            _this.cleanUp(replyAction);
+                            break;
                     }
                 }
             }, false);
@@ -90,14 +93,18 @@ var LedgerBridge = function () {
     }, {
         key: 'makeApp',
         value: async function makeApp() {
+            var _this3 = this;
+
             try {
                 // if (window.navigator.platform.indexOf('Win') > -1 && window.chrome) {
-                window.open('ledgerlive://bridge?appName=Ethereum');
-                await this.checkTransportLoop();
-                this.transport = await _WebSocketTransport2.default.open(BRIDGE_URL);
-                console.log('transport: ', this.transport);
-                this.app = new _hwAppEth2.default(this.transport);
-                console.log('app: ', this.app);
+                _WebSocketTransport2.default.check(BRIDGE_URL).catch(async function () {
+                    window.open('ledgerlive://bridge?appName=Ethereum');
+                    await _this3.checkTransportLoop();
+                    _this3.transport = await _WebSocketTransport2.default.open(BRIDGE_URL);
+                    console.log('transport: ', _this3.transport);
+                    _this3.app = new _hwAppEth2.default(_this3.transport);
+                    console.log('app: ', _this3.app);
+                });
                 // } else {
                 //     this.transport = await TransportU2F.create()
                 // }
@@ -107,9 +114,13 @@ var LedgerBridge = function () {
         }
     }, {
         key: 'cleanUp',
-        value: function cleanUp() {
+        value: function cleanUp(replyAction) {
             this.app = null;
             this.transport.close();
+            this.sendMessageToExtension({
+                action: replyAction,
+                success: true
+            });
         }
     }, {
         key: 'unlock',
@@ -134,9 +145,6 @@ var LedgerBridge = function () {
                     success: false,
                     payload: { error: e.toString() }
                 });
-            } finally {
-                console.log('cleanUp');
-                this.cleanUp();
             }
         }
     }, {
@@ -161,8 +169,6 @@ var LedgerBridge = function () {
                     success: false,
                     payload: { error: e.toString() }
                 });
-            } finally {
-                this.cleanUp();
             }
         }
     }, {
@@ -184,8 +190,6 @@ var LedgerBridge = function () {
                     success: false,
                     payload: { error: e.toString() }
                 });
-            } finally {
-                this.cleanUp();
             }
         }
     }, {
