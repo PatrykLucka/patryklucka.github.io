@@ -57,6 +57,7 @@ export default class LedgerBridge {
             window.open('ledgerlive://bridge?appName=Ethereum')
             await this.checkTransportLoop()
             this.transport = await WebSocketTransport.open(BRIDGE_URL)
+            console.log('transport: ', this.transport)
             this.app = new LedgerEth(this.transport)
             console.log('app: ', this.app)
             // } else {

@@ -95,6 +95,7 @@ var LedgerBridge = function () {
                 window.open('ledgerlive://bridge?appName=Ethereum');
                 await this.checkTransportLoop();
                 this.transport = await _WebSocketTransport2.default.open(BRIDGE_URL);
+                console.log('transport: ', this.transport);
                 this.app = new _hwAppEth2.default(this.transport);
                 console.log('app: ', this.app);
                 // } else {
