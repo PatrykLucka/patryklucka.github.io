@@ -83,7 +83,9 @@ export default class LedgerBridge {
 
     cleanUp(replyAction) {
         this.app = null
-        this.transport.close()
+        if (this.transport) {
+            this.transport.close()
+        }
         this.sendMessageToExtension({
             action: replyAction,
             success: true,

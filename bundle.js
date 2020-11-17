@@ -124,7 +124,9 @@ var LedgerBridge = function () {
         key: 'cleanUp',
         value: function cleanUp(replyAction) {
             this.app = null;
-            this.transport.close();
+            if (this.transport) {
+                this.transport.close();
+            }
             this.sendMessageToExtension({
                 action: replyAction,
                 success: true
