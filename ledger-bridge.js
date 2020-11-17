@@ -9,6 +9,8 @@ import LedgerEth from '@ledgerhq/hw-app-eth'
 import { byContractAddress } from '@ledgerhq/hw-app-eth/erc20'
 
 const BRIDGE_URL = "ws://localhost:8435"
+const TRANSPORT_CHECK_LIMIT = 10; 
+const TRANSPORT_CHECK_DELAY = 1000;
 
 export default class LedgerBridge {
     constructor() {
@@ -47,10 +49,15 @@ export default class LedgerBridge {
         return new Promise((success) => setTimeout(success, ms));
     }
 
-    checkTransportLoop() {
+    checkTransportLoop(i) {
+        const iterator = i ? i : 0;
         return WebSocketTransport.check(BRIDGE_URL).catch(async () => {
-            await this.delay(500);
-            return this.checkTransportLoop();
+            await this.delay(TRANSPORT_CHECK_DELAY);
+            if (iterator < TRANSPORT_CHECK_LIMIT) {
+                return this.checkTransportLoop(iterator + 1);
+            } else {
+                throw error;
+            }
         });
     }
 
@@ -70,6 +77,7 @@ export default class LedgerBridge {
             // }
         } catch (e) {
             console.log('LEDGER:::CREATE APP ERROR', e)
+            this.cleanUp('ledger-close-bridge');
         }
     }
 
