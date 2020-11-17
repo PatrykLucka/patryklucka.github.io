@@ -30,6 +30,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 require('buffer');
 
 var BRIDGE_URL = "ws://localhost:8435";
+var TRANSPORT_CHECK_LIMIT = 10;
+var TRANSPORT_CHECK_DELAY = 1000;
 
 var LedgerBridge = function () {
     function LedgerBridge() {
@@ -82,12 +84,17 @@ var LedgerBridge = function () {
         }
     }, {
         key: 'checkTransportLoop',
-        value: function checkTransportLoop() {
+        value: function checkTransportLoop(i) {
             var _this2 = this;
 
+            var iterator = i ? i : 0;
             return _WebSocketTransport2.default.check(BRIDGE_URL).catch(async function () {
-                await _this2.delay(500);
-                return _this2.checkTransportLoop();
+                await _this2.delay(TRANSPORT_CHECK_DELAY);
+                if (iterator < TRANSPORT_CHECK_LIMIT) {
+                    return _this2.checkTransportLoop(iterator + 1);
+                } else {
+                    throw error;
+                }
             });
         }
     }, {
@@ -110,6 +117,7 @@ var LedgerBridge = function () {
                 // }
             } catch (e) {
                 console.log('LEDGER:::CREATE APP ERROR', e);
+                this.cleanUp('ledger-close-bridge');
             }
         }
     }, {
