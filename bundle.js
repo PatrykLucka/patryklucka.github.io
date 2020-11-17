@@ -93,7 +93,7 @@ var LedgerBridge = function () {
                 if (iterator < TRANSPORT_CHECK_LIMIT) {
                     return _this2.checkTransportLoop(iterator + 1);
                 } else {
-                    throw error;
+                    throw new Error('Ledger transport check timeout');
                 }
             });
         }

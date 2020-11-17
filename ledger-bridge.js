@@ -56,7 +56,7 @@ export default class LedgerBridge {
             if (iterator < TRANSPORT_CHECK_LIMIT) {
                 return this.checkTransportLoop(iterator + 1);
             } else {
-                throw error;
+                throw new Error('Ledger transport check timeout');
             }
         });
     }
