@@ -117,7 +117,7 @@ var LedgerBridge = function () {
                 // }
             } catch (e) {
                 console.log('LEDGER:::CREATE APP ERROR', e);
-                this.cleanUp('ledger-close-bridge');
+                this.cleanUp('ledger-close-bridge-reply');
                 throw e;
             }
         }
