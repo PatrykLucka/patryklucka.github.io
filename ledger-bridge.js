@@ -78,6 +78,7 @@ export default class LedgerBridge {
         } catch (e) {
             console.log('LEDGER:::CREATE APP ERROR', e)
             this.cleanUp('ledger-close-bridge');
+            throw e
         }
     }
 
