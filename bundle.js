@@ -99,7 +99,7 @@ var LedgerBridge = function () {
         }
     }, {
         key: 'makeApp',
-        value: async function makeApp() {
+        value: async function makeApp(replyAction) {
             var _this3 = this;
 
             try {
@@ -117,7 +117,7 @@ var LedgerBridge = function () {
                 // }
             } catch (e) {
                 console.log('LEDGER:::CREATE APP ERROR', e);
-                this.cleanUp('ledger-close-bridge-reply');
+                this.cleanUp();
                 throw e;
             }
         }
@@ -128,10 +128,12 @@ var LedgerBridge = function () {
             if (this.transport) {
                 this.transport.close();
             }
-            this.sendMessageToExtension({
-                action: replyAction,
-                success: true
-            });
+            if (replyAction) {
+                this.sendMessageToExtension({
+                    action: replyAction,
+                    success: true
+                });
+            }
         }
     }, {
         key: 'unlock',
@@ -151,6 +153,8 @@ var LedgerBridge = function () {
                 console.log('err: ', err);
                 var e = this.ledgerErrToMessage(err);
 
+                console.log('sending reply action: ', replyAction);
+                console.log('payload error: ', e.toString());
                 this.sendMessageToExtension({
                     action: replyAction,
                     success: false,

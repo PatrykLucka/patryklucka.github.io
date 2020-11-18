@@ -61,7 +61,7 @@ export default class LedgerBridge {
         });
     }
 
-    async makeApp() {
+    async makeApp(replyAction) {
         try {
             // if (window.navigator.platform.indexOf('Win') > -1 && window.chrome) {
             await WebSocketTransport.check(BRIDGE_URL).catch(async () => {
@@ -77,7 +77,7 @@ export default class LedgerBridge {
             // }
         } catch (e) {
             console.log('LEDGER:::CREATE APP ERROR', e)
-            this.cleanUp('ledger-close-bridge-reply');
+            this.cleanUp();
             throw e
         }
     }
@@ -87,10 +87,12 @@ export default class LedgerBridge {
         if (this.transport) {
             this.transport.close()
         }
-        this.sendMessageToExtension({
-            action: replyAction,
-            success: true,
-        })
+        if (replyAction) {
+            this.sendMessageToExtension({
+                action: replyAction,
+                success: true,
+            })
+        }
     }
 
     async unlock(replyAction, hdPath) {
@@ -110,6 +112,8 @@ export default class LedgerBridge {
             console.log('err: ', err);
             const e = this.ledgerErrToMessage(err)
 
+            console.log('sending reply action: ', replyAction)
+            console.log('payload error: ', e.toString())
             this.sendMessageToExtension({
                 action: replyAction,
                 success: false,
