@@ -221,6 +221,9 @@ var LedgerBridge = function () {
             var isStringError = function isStringError(err) {
                 return typeof err === 'string';
             };
+            var isWrongAppError = function isWrongAppError(err) {
+                return err.message && err.message.includes('6804');
+            };
             var isErrorWithId = function isErrorWithId(err) {
                 return err.hasOwnProperty('id') && err.hasOwnProperty('message');
             };
@@ -233,6 +236,10 @@ var LedgerBridge = function () {
                 }
 
                 return err.metaData.type;
+            }
+
+            if (isWrongAppError(err)) {
+                return 'LEDGER_WRONG_APP';
             }
 
             if (isStringError(err)) {

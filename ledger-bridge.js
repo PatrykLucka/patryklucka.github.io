@@ -177,6 +177,7 @@ export default class LedgerBridge {
     ledgerErrToMessage(err) {
         const isU2FError = (err) => !!err && !!(err).metaData
         const isStringError = (err) => typeof err === 'string'
+        const isWrongAppError = (err) => err.message && err.message.includes('6804')
         const isErrorWithId = (err) => err.hasOwnProperty('id') && err.hasOwnProperty('message')
 
         // https://developers.yubico.com/U2F/Libraries/Client_error_codes.html
@@ -187,6 +188,10 @@ export default class LedgerBridge {
             }
 
             return err.metaData.type
+        }
+
+        if(isWrongAppError(err)) {
+            return 'LEDGER_WRONG_APP'
         }
 
         if (isStringError(err)) {
