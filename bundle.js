@@ -224,6 +224,9 @@ var LedgerBridge = function () {
             var isWrongAppError = function isWrongAppError(err) {
                 return err.message && err.message.includes('6804');
             };
+            var isLedgerLockedError = function isLedgerLockedError(err) {
+                return err.message && err.message.includes('OpenFailed');
+            };
             var isErrorWithId = function isErrorWithId(err) {
                 return err.hasOwnProperty('id') && err.hasOwnProperty('message');
             };
@@ -240,6 +243,9 @@ var LedgerBridge = function () {
 
             if (isWrongAppError(err)) {
                 return 'LEDGER_WRONG_APP';
+            }
+            if (isLedgerLockedError(err)) {
+                return 'LEDGER_LOCKED';
             }
 
             if (isStringError(err)) {
