@@ -9,7 +9,7 @@ import LedgerEth from '@ledgerhq/hw-app-eth'
 import { byContractAddress } from '@ledgerhq/hw-app-eth/erc20'
 
 const BRIDGE_URL = "ws://localhost:8435"
-const TRANSPORT_CHECK_LIMIT = 10; 
+const TRANSPORT_CHECK_LIMIT = 10;
 const TRANSPORT_CHECK_DELAY = 1000;
 
 export default class LedgerBridge {
@@ -72,6 +72,11 @@ export default class LedgerBridge {
                 this.app = new LedgerEth(this.transport)
                 console.log('app: ', this.app)
             })
+            await this.checkTransportLoop()
+            this.transport = await WebSocketTransport.open(BRIDGE_URL)
+            console.log('transport2: ', this.transport)
+            this.app = new LedgerEth(this.transport)
+            console.log('app2: ', this.app)
             // } else {
             //     this.transport = await TransportU2F.create()
             // }
