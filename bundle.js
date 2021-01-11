@@ -113,6 +113,7 @@ var LedgerBridge = function () {
                     console.log('app: ', _this3.app);
                 });
                 await this.checkTransportLoop();
+                console.log('transport there, opening... ', BRIDGE_URL);
                 this.transport = await _WebSocketTransport2.default.open(BRIDGE_URL);
                 console.log('transport2: ', this.transport);
                 this.app = new _hwAppEth2.default(this.transport);
