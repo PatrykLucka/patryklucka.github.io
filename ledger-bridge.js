@@ -64,14 +64,15 @@ export default class LedgerBridge {
     async makeApp(replyAction) {
         try {
             // if (window.navigator.platform.indexOf('Win') > -1 && window.chrome) {
-            // await WebSocketTransport.check(BRIDGE_URL).catch(async () => {
-            //     window.open('ledgerlive://bridge?appName=Ethereum')
-            //     await this.checkTransportLoop()
-            //     this.transport = await WebSocketTransport.open(BRIDGE_URL)
-            //     console.log('transport: ', this.transport)
-            //     this.app = new LedgerEth(this.transport)
-            //     console.log('app: ', this.app)
-            // })
+            await WebSocketTransport.check(BRIDGE_URL).catch(async () => {
+                window.open('ledgerlive://bridge?appName=Ethereum')
+                await this.checkTransportLoop()
+                this.transport = await WebSocketTransport.open(BRIDGE_URL)
+                console.log('transport: ', this.transport)
+                this.app = new LedgerEth(this.transport)
+                console.log('app: ', this.app)
+                return
+            })
             await this.checkTransportLoop()
             console.log('transport there, opening... ', BRIDGE_URL)
             this.transport = await WebSocketTransport.open(BRIDGE_URL)
