@@ -111,14 +111,14 @@ var LedgerBridge = function () {
                     console.log('transport: ', _this3.transport);
                     _this3.app = new _hwAppEth2.default(_this3.transport);
                     console.log('app: ', _this3.app);
-                    return;
+                    // return
                 });
-                await this.checkTransportLoop();
-                console.log('transport there, opening... ', BRIDGE_URL);
-                this.transport = await _WebSocketTransport2.default.open(BRIDGE_URL);
-                console.log('transport2: ', this.transport);
-                this.app = new _hwAppEth2.default(this.transport);
-                console.log('app2: ', this.app);
+                // await this.checkTransportLoop()
+                // console.log('transport there, opening... ', BRIDGE_URL)
+                // this.transport = await WebSocketTransport.open(BRIDGE_URL)
+                // console.log('transport2: ', this.transport)
+                // this.app = new LedgerEth(this.transport)
+                // console.log('app2: ', this.app)
                 // } else {
                 //     this.transport = await TransportU2F.create()
                 // }
